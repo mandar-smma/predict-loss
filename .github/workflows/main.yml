@@ -1,4 +1,5 @@
 name: Deploy Azure Resources with PowerShell
+
 on:
   workflow_dispatch:
 
