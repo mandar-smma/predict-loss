@@ -1,7 +1,7 @@
 
 @description('Deployment location for resources in this deployment')
 param deploymentLocation string // ex: westeurope
-param sftpResourceGroupName string
+param sftpResourceGroupName string = 'PO-Apim-weu-rg'
 param workspaceName string = 'syn${uniqueString(resourceGroup().id)}'
 
 // Existing SFTP platform resource group
