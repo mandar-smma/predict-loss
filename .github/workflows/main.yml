@@ -8,6 +8,7 @@ env:
   LOCATION: 'westeurope' 
   SHORT_LOCATION: 'weu'
   SUBSCRIPTION_ID: 'b2fe2be6-a721-41e9-a5c3-6b45a3765f76'
+  SFTPRESOURCEGROUPNAME: 'PO-Apim-weu-rg'
 
 jobs:
   deploy:
@@ -56,3 +57,13 @@ jobs:
             }
             echo "resourceGroupName=$resourceGroupName" >> $env:GITHUB_OUTPUT
           azPSVersion: "latest"
+      - name: Deploy Bicep Template
+        id: deploy_bicep
+        uses: azure/arm-deploy@v1
+        with:
+            resourceGroupName: ${{ steps.deploy_rg.outputs.resourceGroupName }}
+            template: ./infra/azure-deploy.bicep
+            parameters: |
+              deploymentLocation=${{ env.LOCATION }}
+              sftpResourceGroupName={{ env.LOCATION }}
+            deploymentMode: Incremental
