@@ -1,8 +1,6 @@
 
 param synapseWorkspaceName string
 param deploymentLocation string
-param sftpResourceGroupName string
-param storageAccountName string
 
 @description('SQL administrator login for Synapse workspace')
 param sqlAdminLogin string = 'synadmin'
@@ -10,22 +8,45 @@ param sqlAdminLogin string = 'synadmin'
 @secure()
 param sqlAdminPassword string = 'Test-StrongP@ssw0rd123!'
 
-// Existing SFTP platform resource group
-resource sftpResourceGroup 'Microsoft.Resources/resourceGroups@2023-07-01' existing = {
-  scope: subscription()
-  name: sftpResourceGroupName
+// Create ADLS Gen2 account (required for default storage)
+resource synapseStorageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+  name: 'adls${uniqueString(resourceGroup().id)}'
+  location: deploymentLocation
+  tags: { RESSOURCE_PURPOSE: 'Storage' }
+  sku: {
+    name: 'Standard_LRS'
+  }
+  kind: 'StorageV2'
+  properties: {
+    isHnsEnabled: true
+    allowBlobPublicAccess: false
+    allowCrossTenantReplication: false
+    allowSharedKeyAccess: true
+    defaultToOAuthAuthentication: false
+    encryption: {
+      services: {
+        file: {
+          keyType: 'Account'
+          enabled: true
+        }
+        blob: {
+          keyType: 'Account'
+          enabled: true
+        }
+      }
+      keySource: 'Microsoft.Storage'
+    }
+  }
 }
 
-// Existing storage account from SFTP platform
-resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' existing = {
-  scope: sftpResourceGroup
-  name: storageAccountName
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2025-06-01' = {
+  parent: synapseStorageAccount
+  name: 'default'
 }
 
-// Create filesystem (container) in ADLS
-resource fileSystem 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
-  name: '${storageAccount.name}/default/synapseadlsfilesystem'
-  dependsOn: [storageAccount]
+resource containerService 'Microsoft.Storage/storageAccounts/blobServices/containers@2025-06-01' = {
+  parent: blobService
+  name: 'synapseworkspaceContainer'
 }
 
 // Deploy Synapse Workspace (serverless included automatically)
@@ -37,8 +58,8 @@ resource synapseWorkspace 'Microsoft.Synapse/workspaces@2021-06-01' = {
   }
   properties: {
     defaultDataLakeStorage: {
-      accountUrl: storageAccount.properties.primaryEndpoints.dfs
-      filesystem: fileSystem.name
+      accountUrl: synapseStorageAccount.properties.primaryEndpoints.dfs
+      filesystem: containerService.name
       createManagedPrivateEndpoint: true  // Optional: for secure access
     }
     sqlAdministratorLogin: sqlAdminLogin
@@ -52,7 +73,7 @@ module storageRoleAssign 'roles.bicep' = {
   name: 'synapse-storage-role'
   scope: resourceGroup()
   params: {
-    storageAccountName: storageAccount.name
+    storageAccountName: synapseStorageAccount.name
     synapsePrincipalId: synapseWorkspace.identity.principalId
   }
 }
