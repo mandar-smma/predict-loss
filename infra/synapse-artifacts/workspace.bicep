@@ -61,6 +61,7 @@ resource synapseWorkspace 'Microsoft.Synapse/workspaces@2021-06-01' = {
       accountUrl: synapseStorageAccount.properties.primaryEndpoints.dfs
       filesystem: containerService.name
       createManagedPrivateEndpoint: true  // Optional: for secure access
+      resourceId: synapseStorageAccount.id
     }
     sqlAdministratorLogin: sqlAdminLogin
     sqlAdministratorLoginPassword: sqlAdminPassword
