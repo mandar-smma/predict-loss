@@ -46,7 +46,7 @@ resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2025-06-01'
 
 resource containerService 'Microsoft.Storage/storageAccounts/blobServices/containers@2025-06-01' = {
   parent: blobService
-  name: 'synapseworkspaceContainer'
+  name: 'default'
 }
 
 // Deploy Synapse Workspace (serverless included automatically)
@@ -70,7 +70,7 @@ resource synapseWorkspace 'Microsoft.Synapse/workspaces@2021-06-01' = {
 
 // Deploy role assignment via module at different RG scope
 module storageRoleAssign 'roles.bicep' = {
-  name: 'synapsestoragerolemodule'
+  name: 'synapsestorage-rolemodule'
   scope: resourceGroup()
   params: {
     storageAccountName: synapseStorageAccount.name
