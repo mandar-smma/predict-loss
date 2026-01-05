@@ -70,7 +70,7 @@ resource synapseWorkspace 'Microsoft.Synapse/workspaces@2021-06-01' = {
 
 // Deploy role assignment via module at different RG scope
 module storageRoleAssign 'roles.bicep' = {
-  name: 'synapse-storage-role'
+  name: 'synapsestoragerolemodule'
   scope: resourceGroup()
   params: {
     storageAccountName: synapseStorageAccount.name
