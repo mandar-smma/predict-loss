@@ -24,7 +24,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' existing 
 
 // Create filesystem (container) in ADLS
 resource fileSystem 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
-  name: '${storageAccount.name}/default'
+  name: '${storageAccount.name}/default/synapseadlsfilesystem'
   dependsOn: [storageAccount]
 }
 
