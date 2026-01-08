@@ -47,7 +47,6 @@ jobs:
 
             Write-Host "Connected to Azure as Service Principal: $appId"
             Write-Host "Using subscription ID: $($creds.subscriptionId)"
-            Write-Host "sqlAdminPassword is: $sqlAdminpwd"
 
             Write-Host "Setting subscription context..."
             Set-AzContext -SubscriptionId $creds.subscriptionId
@@ -56,6 +55,7 @@ jobs:
             if (-not (Get-AzResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue)) {
               New-AzResourceGroup -Name $resourceGroupName -Location ${{ env.LOCATION }}
             }
+            sqlAdminPwd=$sqlAdminPwd >> $env:GITHUB_OUTPUT
             echo "resourceGroupName=$resourceGroupName" >> $env:GITHUB_OUTPUT
           azPSVersion: "latest"
       - name: Deploy Bicep Template
@@ -65,5 +65,6 @@ jobs:
             resourceGroupName: ${{ steps.deploy_rg.outputs.resourceGroupName }}
             template: ./infra/azure-deploy.bicep
             parameters: |
-              deploymentLocation=${{ env.LOCATION }}
+              deploymentLocation=${{ env.LOCATION }} sqlAdminPassword=${{ steps.deploy_rg.outputs.sqlAdminPwd }}
+
             deploymentMode: Incremental

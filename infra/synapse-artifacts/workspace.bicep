@@ -6,7 +6,7 @@ param deploymentLocation string
 param sqlAdminLogin string = 'synadmin'
 @description('SQL administrator password for Synapse workspace')
 @secure()
-param sqlAdminPassword string = 'Test-StrongP@ssw0rd123!'
+param sqlAdminPassword string
 
 // Create ADLS Gen2 account (required for default storage)
 resource synapseStorageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
