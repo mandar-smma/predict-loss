@@ -55,7 +55,7 @@ jobs:
             if (-not (Get-AzResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue)) {
               New-AzResourceGroup -Name $resourceGroupName -Location ${{ env.LOCATION }}
             }
-            sqlAdminPwd=$sqlAdminPwd >> $env:GITHUB_OUTPUT
+            echo "sqlAdminPwd=$sqlAdminPwd" >> $env:GITHUB_OUTPUT
             echo "resourceGroupName=$resourceGroupName" >> $env:GITHUB_OUTPUT
           azPSVersion: "latest"
       - name: Deploy Bicep Template
