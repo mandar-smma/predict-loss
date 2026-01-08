@@ -57,6 +57,7 @@ jobs:
             }
             echo "sqlAdminPwd=$sqlAdminPwd" >> $env:GITHUB_OUTPUT
             echo "resourceGroupName=$resourceGroupName" >> $env:GITHUB_OUTPUT
+            Write-Host "-------------- Using sqlAdminpwd : $sqlAdminpwd"
           azPSVersion: "latest"
       - name: Deploy Bicep Template
         id: deploy_bicep
@@ -66,5 +67,4 @@ jobs:
             template: ./infra/azure-deploy.bicep
             parameters: |
               deploymentLocation=${{ env.LOCATION }} sqlAdminPassword=${{ steps.deploy_rg.outputs.sqlAdminPwd }}
-
             deploymentMode: Incremental
