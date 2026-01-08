@@ -4,7 +4,7 @@ param deploymentLocation string
 
 @description('SQL administrator login for Synapse workspace')
 param sqlAdminLogin string = 'synadmin'
-@description('SQL administrator password for Synapse workspace')
+@description('SQL adpwd for Synapse workspace')
 @secure()
 param sqlAdminPassword string
 
