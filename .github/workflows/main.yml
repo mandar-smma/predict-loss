@@ -34,6 +34,7 @@ jobs:
             $creds = $env:AZURE_CREDENTIALS | ConvertFrom-Json			
             $tenantId = $creds.tenantId 
             $appId =  $creds.clientId  # Also known as Client ID
+            $sqlAdminpwd = $creds.SQL_ADMIN_PASSWORD
 
             # "Start deploy to Azure"
             Write-Host " Deploy to Azure..."
@@ -46,6 +47,7 @@ jobs:
 
             Write-Host "Connected to Azure as Service Principal: $appId"
             Write-Host "Using subscription ID: $($creds.subscriptionId)"
+            Write-Host "SQL_ADMIN_PASSWORD is: $($creds.SQL_ADMIN_PASSWORD)"
 
             Write-Host "Setting subscription context..."
             Set-AzContext -SubscriptionId $creds.subscriptionId
