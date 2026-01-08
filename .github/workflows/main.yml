@@ -34,7 +34,7 @@ jobs:
             $creds = $env:AZURE_CREDENTIALS | ConvertFrom-Json
             $tenantId = $creds.tenantId 
             $appId =  $creds.clientId  # Also known as Client ID
-            $sqlAdminPwd = $creds.sqlAdminPassword
+            $sqlAdminPassword = $creds.sqlAdminPassword
 
             # "Start deploy to Azure"
             Write-Host " Deploy to Azure..."
@@ -55,9 +55,9 @@ jobs:
             if (-not (Get-AzResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue)) {
               New-AzResourceGroup -Name $resourceGroupName -Location ${{ env.LOCATION }}
             }
-            echo "sqlAdminPwd=$sqlAdminPwd" >> $env:GITHUB_OUTPUT
+            echo "sqlAdminPassword=$sqlAdminPassword" >> $env:GITHUB_OUTPUT
             echo "resourceGroupName=$resourceGroupName" >> $env:GITHUB_OUTPUT
-            Write-Host "-------------- Using sqlAdminpwd : $sqlAdminpwd"
+            Write-Host "-------------- Using sqlAdminPassword : $sqlAdminPassword"
           azPSVersion: "latest"
       - name: Deploy Bicep Template
         id: deploy_bicep
@@ -66,5 +66,5 @@ jobs:
             resourceGroupName: ${{ steps.deploy_rg.outputs.resourceGroupName }}
             template: ./infra/azure-deploy.bicep
             parameters: |
-              deploymentLocation=${{ env.LOCATION }} sqlAdminPassword=${{ steps.deploy_rg.outputs.sqlAdminPwd }}
+              deploymentLocation=${{ env.LOCATION }} sqlAdminPassword=${{ steps.deploy_rg.outputs.sqlAdminPassword }}
             deploymentMode: Incremental
