@@ -34,7 +34,7 @@ jobs:
             $creds = $env:AZURE_CREDENTIALS | ConvertFrom-Json
             $tenantId = $creds.tenantId 
             $appId =  $creds.clientId  # Also known as Client ID
-            $sqlAdminpwd = $creds.sqlAdminPassword
+            $sqlAdminPwd = $creds.sqlAdminPassword
 
             # "Start deploy to Azure"
             Write-Host " Deploy to Azure..."
