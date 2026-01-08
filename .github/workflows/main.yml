@@ -31,10 +31,10 @@ jobs:
           inlineScript: |
             # Authenticate to Azure
             Write-Host "Authenticating with Azure..."
-            $creds = $env:AZURE_CREDENTIALS | ConvertFrom-Json			
+            $creds = $env:AZURE_CREDENTIALS | ConvertFrom-Json			²
             $tenantId = $creds.tenantId 
             $appId =  $creds.clientId  # Also known as Client ID
-            $sqlAdminpwd = $creds.SQL_ADMIN_PASSWORD
+            $sqlAdminpwd = $creds.sqlAdminPassword
 
             # "Start deploy to Azure"
             Write-Host " Deploy to Azure..."
@@ -47,7 +47,7 @@ jobs:
 
             Write-Host "Connected to Azure as Service Principal: $appId"
             Write-Host "Using subscription ID: $($creds.subscriptionId)"
-            Write-Host "SQL_ADMIN_PASSWORD is: $($creds.SQL_ADMIN_PASSWORD)"
+            Write-Host "sqlAdminPassword is: $sqlAdminpwd"
 
             Write-Host "Setting subscription context..."
             Set-AzContext -SubscriptionId $creds.subscriptionId
