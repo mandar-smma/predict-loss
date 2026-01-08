@@ -65,6 +65,5 @@ jobs:
         with:
             resourceGroupName: ${{ steps.deploy_rg.outputs.resourceGroupName }}
             template: ./infra/azure-deploy.bicep
-            parameters: |
-              deploymentLocation=${{ env.LOCATION }} sqlAdminPassword=${{ steps.deploy_rg.outputs.sqlAdminPassword }}
+            parameters: deploymentLocation=${{ env.LOCATION }} sqlAdminPassword=${{ steps.deploy_rg.outputs.sqlAdminPassword }}
             deploymentMode: Incremental
