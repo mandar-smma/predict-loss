@@ -31,7 +31,7 @@ jobs:
           inlineScript: |
             # Authenticate to Azure
             Write-Host "Authenticating with Azure..."
-            $creds = $env:AZURE_CREDENTIALS | ConvertFrom-Json			²
+            $creds = $env:AZURE_CREDENTIALS | ConvertFrom-Json
             $tenantId = $creds.tenantId 
             $appId =  $creds.clientId  # Also known as Client ID
             $sqlAdminpwd = $creds.sqlAdminPassword
